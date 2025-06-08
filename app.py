@@ -9,9 +9,10 @@ def sumar_endpoint():
         a = float(request.args.get("a", 0))
         b = float(request.args.get("b", 0))
         resultado = sumar(a, b)
-        return jsonify({"resultado": resultado})
+        mensaje = f"El resultado de {a} + {b} es: {resultado}"
+        return jsonify({"mensaje": mensaje})
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
 if __name__ == "__main__":
-    app.run()
+    app.run(host="0.0.0.0", port=10000)
