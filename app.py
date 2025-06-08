@@ -16,3 +16,7 @@ def sumar_endpoint():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
+<<<<<<< HEAD
+=======
+
+>>>>>>> 5b10831f74c1fa0c8e5fb39c202e3ed50a45deae
