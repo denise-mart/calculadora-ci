@@ -43,22 +43,28 @@ jobs:
         run: |
           flake8 .
 
-      - name: Notificar resultado del pipeline en Slack 🧪
-        if: always()
-        run: |
-          if [ "${{ job.status }}" == "success" ]; then
-            curl -X POST -H 'Content-type: application/json' \
-            --data '{"text":"✅ *Todos los pasos del pipeline pasaron correctamente* en `${{ github.ref_name }}` 🎉"}' \
-            ${{ secrets.SLACK_WEBHOOK }}
-          else
-            curl -X POST -H 'Content-type: application/json' \
-            --data '{"text":"❌ *Falló el pipeline en `${{ github.ref_name }}`*. Revisá los logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} 🔍"}' \
-            ${{ secrets.SLACK_WEBHOOK }}
-
-            
-      - name: Notificar cierre en Slack 🏁
-        if: always()
+  notify-slack-success:
+    needs: test
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notificar a Slack si fue exitosa la ejecución de la build 
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"📄 Pipeline finalizado para `${{ github.ref_name }}`. Resultado: *${{ job.status }}*"}' \
-          ${{ secrets.SLACK_WEBHOOK }}
+          --data '{
+            "text":"*🎉 ¡Build completada exitosamente!* 🎉\n• Repositorio: `${{ github.repository }}`\n• Branch: `${{ github.ref_name }}`\n• Commit: `${{ github.sha }}`\n• Autor: `${{ github.actor }}`"
+          }' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  notify-slack-on-failure:
+    needs: test
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notificar a Slack si falló la ejecución de la build
+        run: |
+          curl -X POST -H 'Content-type: application/json' \
+          --data '{
+            "text":"*❌ ¡La build ha fallado!* ⚠️\n• Repositorio: `${{ github.repository }}`\n• Branch: `${{ github.ref_name }}`\n• Commit: `${{ github.sha }}`\n• Autor: `${{ github.actor }}`"
+          }' \
+          ${{ secrets.SLACK_WEBHOOK_URL }}
