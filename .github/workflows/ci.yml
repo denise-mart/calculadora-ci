@@ -12,7 +12,7 @@ on:
       - develop
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -52,25 +52,25 @@ jobs:
 
 
   Notify-Slack-Failure:
-    needs: test
+    needs: build
     if: failure()
     runs-on: ubuntu-latest
     steps:
     - name: Notify Slack - ❌ Fallaron los tests
       run: |
-        curl -X POST -H 'Content-type: application/json' \--data '{"text":"❌ Fallo en los tests en ${{ github.ref_name }}. Revisa los logs en GitHub Actions 🔍"}' \${{ secrets.SLACK_WEBHOOK }}
+        curl -X POST -H 'Content-type: application/json' \--data '{"text":"📝 Pipeline finalizado ❌ Fallo en los tests en ${{ github.ref_name }}. Revisa los logs en GitHub Actions 🔍 Ver estado completo en: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'"}' \${{ secrets.SLACK_WEBHOOK }}
 
   Notify-Slack-Success:
-    needs: test
+    needs: build
     if: success()
     runs-on: ubuntu-latest
     steps:      
     - name: Notify Slack - ✅ Tests pasaron exitosamente
       run: |
-        curl -X POST -H 'Content-type: application/json' \--data '{"text":"✅ Tests pasaron exitosamente en ${{ github.ref_name }}. Todo está en orden 🎉"}' \${{ secrets.SLACK_WEBHOOK }}
+        curl -X POST -H 'Content-type: application/json' \--data '{"text":"📝 Pipeline finalizado ✅ Tests pasaron exitosamente en ${{ github.ref_name }}. Todo está en orden 🎉 Ver estado completo en: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}'"}' \${{ secrets.SLACK_WEBHOOK }}
 
   Notify-Slack-Pipeline:
-    needs: test
+    needs: build
     if: always()
     runs-on: ubuntu-latest
     steps:  
