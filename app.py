@@ -3,6 +3,7 @@ from src.operations.suma import sumar
 
 app = Flask(__name__)
 
+
 @app.route("/sumar", methods=["GET"])
 def sumar_endpoint():
     try:
@@ -14,5 +15,6 @@ def sumar_endpoint():
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 
+
 if __name__ == "__main__":
-  app.run(host="0.0.0.0", port=10000)
+    app.run(host="0.0.0.0", port=10000)
