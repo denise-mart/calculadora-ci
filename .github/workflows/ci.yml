@@ -12,53 +12,68 @@ on:
       - develop
 
 jobs:
-  test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Notify Slack - Inicio del pipeline 🚀
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"🔄 Se inició un nuevo pipeline de CI para *${{ github.repository }}* en la rama *${{ github.ref_name }}*"}' \
-          ${{ secrets.SLACK_WEBHOOK }}
+      
+    - name: Notify Slack - Inicio del pipeline 🚀
+      run: |
+        curl -X POST -H 'Content-type: application/json' \--data '{"text":"🔄 Se inició un nuevo pipeline de CI para ${{ github.repository }} en la rama ${{ github.ref_name }}"}' \${{ secrets.SLACK_WEBHOOK }}
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+      
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
+      
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+      
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
 
-      - name: Run tests
-        run: |
-          pytest
+      
+    - name: Run tests
 
-      - name: Lint with flake8
-        run: |
-          flake8 .
+      id: test_step
+      run: |
+        pytest
 
-      - name: Notify Slack - Resultado del testing 🧪
-        if: always()
-        run: |
-          if [ "${{ steps.test_step.outcome }}" == "success" ]; then
-            curl -X POST -H 'Content-type: application/json' \
-            --data '{"text":"✅ *Tests pasaron exitosamente* en `${{ github.ref_name }}`. Todo está en orden 🎉"}' \
-            ${{ secrets.SLACK_WEBHOOK }}
-          else
-            curl -X POST -H 'Content-type: application/json' \
-            --data '{"text":"❌ *Fallo en los tests* en `${{ github.ref_name }}`. Revisa los logs en GitHub Actions 🔍"}' \
-            ${{ secrets.SLACK_WEBHOOK }}
-          fi
+      
+    - name: Lint with flake8
+      id: lint_step
+      run: |
+        flake8 .
 
-      - name: Notify Slack - Pipeline completado 🏁
-        if: always()
-        run: |
-          curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"📝 Pipeline finalizado para `${{ github.ref_name }}`. Ver estado completo en: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
-          ${{ secrets.SLACK_WEBHOOK }}
+
+  Notify-Slack-Failure:
+    needs: build
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+    - name: Notify Slack - ❌ Fallaron los tests
+      run: |
+        curl -X POST -H 'Content-type: application/json' \--data '{"text":"❌ Fallo en los tests en ${{ github.ref_name }}. Revisa los logs en GitHub Actions 🔍"}' \${{ secrets.SLACK_WEBHOOK }}
+
+  Notify-Slack-Success:
+    needs: build
+    if: success()
+    runs-on: ubuntu-latest
+    steps:      
+    - name: Notify Slack - ✅ Tests pasaron exitosamente
+      run: |
+        curl -X POST -H 'Content-type: application/json' \--data '{"text":"✅ Tests pasaron exitosamente en ${{ github.ref_name }}. Todo está en orden 🎉"}' \${{ secrets.SLACK_WEBHOOK }}
+
+  Notify-Slack-Pipeline:
+    needs: build
+    if: always()
+    runs-on: ubuntu-latest
+    steps:  
+    - name: Notify Slack - Pipeline completado 🏁
+      run: |
+        curl -X POST -H 'Content-type: application/json' \--data '{"text":"📝 Pipeline finalizado para ${{ github.ref_name }}. Ver estado completo en: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \${{ secrets.SLACK_WEBHOOK }}
