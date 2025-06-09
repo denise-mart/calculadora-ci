@@ -43,22 +43,22 @@ jobs:
         run: |
           flake8 .
 
-      - name: Notify Slack - Resultado del testing 🧪
+      - name: Notificar resultado del pipeline en Slack 🧪
         if: always()
         run: |
-          if [ "${{ steps.test_step.outcome }}" == "success" ]; then
+          if [ "${{ job.status }}" == "success" ]; then
             curl -X POST -H 'Content-type: application/json' \
-            --data '{"text":"✅ *Tests pasaron exitosamente* en `${{ github.ref_name }}`. Todo está en orden 🎉"}' \
+            --data '{"text":"✅ *Todos los pasos del pipeline pasaron correctamente* en `${{ github.ref_name }}` 🎉"}' \
             ${{ secrets.SLACK_WEBHOOK }}
           else
             curl -X POST -H 'Content-type: application/json' \
-            --data '{"text":"❌ *Fallo en los tests* en `${{ github.ref_name }}`. Revisa los logs en GitHub Actions 🔍"}' \
+            --data '{"text":"❌ *Falló el pipeline en `${{ github.ref_name }}`*. Revisá los logs: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} 🔍"}' \
             ${{ secrets.SLACK_WEBHOOK }}
-          fi
 
-      - name: Notify Slack - Pipeline completado 🏁
+            
+      - name: Notificar cierre en Slack 🏁
         if: always()
         run: |
           curl -X POST -H 'Content-type: application/json' \
-          --data '{"text":"📝 Pipeline finalizado para `${{ github.ref_name }}`. Ver estado completo en: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"}' \
+          --data '{"text":"📄 Pipeline finalizado para `${{ github.ref_name }}`. Resultado: *${{ job.status }}*"}' \
           ${{ secrets.SLACK_WEBHOOK }}
