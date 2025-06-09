@@ -39,7 +39,6 @@ jobs:
 
       
     - name: Run tests
-      continue-on-error: true
 
       id: test_step
       run: |
