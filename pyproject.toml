@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "ic"
+version = "0.1.0"
+description = "Calculadora con Flask, tests y CI"
+authors = ["Denise <agos.martinez02@hotmail.com>"]
+readme = "README.md"
+packages = [{ include = "src" }]
+requires-python = ">=3.12"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+flask = "^3.1"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.4"
+flake8 = "^7.2"
+black = "^25.1"
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
