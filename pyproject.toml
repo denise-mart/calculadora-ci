@@ -1,0 +1,20 @@
+[project]
+name = "ic"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Denise",email = "agos.martinez02@hotmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "black (==25.1.0)",
+    "flake8 (==7.2.0)",
+    "flask (==3.1.1)",
+    "pytest (==8.4.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
