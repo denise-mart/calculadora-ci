@@ -1,27 +1,26 @@
-# Imagen base oficial de Python
+# Imagen base liviana de Python 3.11
 FROM python:3.11-slim
 
-# Seteamos el directorio de trabajo
+# Directorio de trabajo
 WORKDIR /app
 
 # Instalamos dependencias del sistema necesarias
 RUN apt-get update && apt-get install -y curl build-essential && apt-get clean
 
-# Instalamos Poetry
-RUN curl -sSL https://install.python-poetry.org | python3 -
+# Instalamos Poetry versión estable
+ENV POETRY_VERSION=1.8.2
+RUN curl -sSL https://install.python-poetry.org | python3 - \
+ && ln -s /root/.local/bin/poetry /usr/local/bin/poetry
 
-# Agregamos el path de Poetry al entorno
-ENV PATH="/root/.local/bin:$PATH"
-
-# Copiamos el proyecto
+# Copiamos el código fuente
 COPY . .
 
-# Instalamos las dependencias
+# Instalamos dependencias con Poetry, sin entorno virtual interno
 RUN poetry config virtualenvs.create false \
  && poetry install --no-interaction --no-ansi
 
-# Exponemos el puerto para Render
+# Exponemos el puerto que usa Render
 EXPOSE 8000
 
-# Comando para iniciar la app (ajustá el path si es necesario)
+# Comando para iniciar la app en producción
 CMD ["gunicorn", "src.app_web:app", "--bind", "0.0.0.0:8000"]
