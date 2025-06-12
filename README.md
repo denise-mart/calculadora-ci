@@ -56,6 +56,23 @@ Accedé desde el navegador en:
 
 ---
 
+## 🔧 Automatizar build local (PowerShell)
+
+Podés usar el script `build.ps1` para automatizar la ejecución de linters, tests y build de la app en un solo paso:
+
+```powershell
+.uild.ps1
+```
+
+Este script ejecuta:
+
+- `flake8`
+- `black --check`
+- `pytest`
+- `npm run build` (si aplica)
+
+---
+
 ## 🐳 Uso con Docker
 
 ### Build de imagen
@@ -98,15 +115,29 @@ App desplegada automáticamente en:
 
 ```
 calculadora-ci/
-├── app.py               # App Flask
-├── templates/           # HTMLs de la interfaz
-├── tests/               # Tests unitarios
-├── Dockerfile           # Imagen del contenedor
+├── app.py
+├── build.ps1                   
+├── dockerfile
 ├── .dockerignore
-├── pyproject.toml       # Configuración con Poetry
+├── pyproject.toml
 ├── poetry.lock
-├── .github/workflows/   # CI/CD con GitHub Actions
-└── README.md
+├── pytest.ini
+├── src/
+│   └── ic/
+│       ├── __init__.py
+│       └── operations/
+│           ├── multiplicacion.py
+│           ├── resta.py
+│           └── suma.py
+├── static/
+│   └── background.png
+├── templates/
+│   └── index.html
+├── tests/
+│   ├── test_multiplicar.py
+│   ├── test_resta.py
+│   └── test_suma.py
+└── .github/workflows/          
 ```
 
 ---
