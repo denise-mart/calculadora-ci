@@ -56,23 +56,6 @@ Accedé desde el navegador en:
 
 ---
 
-## 🐳 Uso con Docker
-
-### Build de imagen
-
-```bash
-docker build -t calculadora-ci .
-```
-
-### Ejecutar contenedor
-
-```bash
-docker run -p 8000:8000 calculadora-ci
-```
-
-Luego acceder en: [http://localhost:8000](http://localhost:8000)
-
----
 
 ## ⚙️ CI/CD
 
