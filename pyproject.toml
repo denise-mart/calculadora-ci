@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "calculadora-ci"
+name = "ic"
 version = "0.1.0"
 description = ""
 authors = ["Denise <agos.martinez02@hotmail.com>"]
