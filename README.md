@@ -1,10 +1,10 @@
 # 🧮 Calculadora CI en Flask
 
-Este proyecto es una calculadora simple hecha con Flask, preparada para integrarse con CI/CD (GitHub Actions), testing automático (`pytest`) y control de calidad de código (`flake8`, `black`). El entorno se maneja completamente con `Poetry`.
+Este proyecto es una calculadora simple hecha con Flask, preparada para integrarse con CI/CD (GitHub Actions), testing automático (`pytest`) y control de calidad de código (`flake8`, `black`). El entorno se maneja completamente con `Poetry`, y se encuentra contenedorizado con Docker para facilitar su despliegue en producción.
 
 ---
 
-## 🚀 Instalación
+## 🚀 Instalación local
 
 ### 1. Clonar el repositorio
 
@@ -56,15 +56,58 @@ Accedé desde el navegador en:
 
 ---
 
+## 🐳 Uso con Docker
+
+### Build de imagen
+
+```bash
+docker build -t calculadora-ci .
+```
+
+### Ejecutar contenedor
+
+```bash
+docker run -p 8000:8000 calculadora-ci
+```
+
+Luego acceder en: [http://localhost:8000](http://localhost:8000)
+
+---
+
 ## ⚙️ CI/CD
 
 Este proyecto incluye un workflow de GitHub Actions que:
 
-- Corre tests automáticamente
-- Aplica linters
-- Notifica a Slack
-- Despliega a Render
+- Corre tests automáticamente (`pytest`)
+- Aplica linters (`flake8`, `black`)
+- Crea una imagen Docker
+- La sube a **GitHub Container Registry (GHCR)**
+- Llama al Webhook de **Render** para desplegar automáticamente la nueva versión
+- Envía notificaciones al canal de **Slack** del equipo
 
+---
+
+## 🌐 Producción
+
+App desplegada automáticamente en:  
+👉 [`https://calculadora-ci-latest.onrender.com`](https://calculadora-ci-latest.onrender.com)
+
+---
+
+## 📂 Estructura del proyecto
+
+```
+calculadora-ci/
+├── app.py               # App Flask
+├── templates/           # HTMLs de la interfaz
+├── tests/               # Tests unitarios
+├── Dockerfile           # Imagen del contenedor
+├── .dockerignore
+├── pyproject.toml       # Configuración con Poetry
+├── poetry.lock
+├── .github/workflows/   # CI/CD con GitHub Actions
+└── README.md
+```
 
 ---
 
