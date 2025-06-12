@@ -1,0 +1,35 @@
+# Archivos y carpetas que no deberían entrar a la imagen
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+.env
+.env.*
+
+# Entornos virtuales (aunque Poetry no crea por defecto)
+.venv/
+
+# Archivos de control
+.git/
+.gitignore
+.dockerignore
+.gitattributes
+
+# Cosas de CI/CD
+.github/
+.vscode/
+.idea/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Archivos de testing
+.coverage
+.tox/
+htmlcov/
+tests/__pycache__/
+
