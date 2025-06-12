@@ -2,7 +2,8 @@
 name = "calculadora-ci"
 version = "0.1.0"
 description = ""
-authors = [{ name = "Denise", email = "agos.martinez02@hotmail.com" }]
+authors = ["Denise <agos.martinez02@hotmail.com>"]
+
 
 
 
